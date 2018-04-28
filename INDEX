@@ -1,0 +1,5 @@
+lua2json-tiled
+  将tiled导出的lua转换为tiled可打开的json文件
+
+plist2images
+  将TexturePacker的plist合图转换为多个单张图片,原工程地址:https://github.com/onepill/texture_unpacker_scirpt.git
