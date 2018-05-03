@@ -1,0 +1,5 @@
+﻿# Ignore thumbnails created by windows
+Thumbs.db
+
+# Ignore python compiled files
+*.pyc
