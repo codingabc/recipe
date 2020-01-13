@@ -63,8 +63,41 @@ def match_filter(ext, filters=[]):
 	return ext in filters
 
 
+def copyonefile(conn, cur, root, name, folder, tofolder, autoremove):
+	fullname = path.join(root, name)
+	hashstr = file_hash(fullname)
+	if not hash_exist(cur, hashstr):
+		todir = path.relpath(root, folder)
+		toname = path.join(tofolder, todir, name)
+		if path.exists(toname):
+			toname = solename(toname)
+		todir = path.split(toname)[0]
+		if not path.exists(todir):
+			os.makedirs(todir)
+		print("复制到", toname)
+		shutil.copy(fullname, toname)
+		hash_append(cur, hashstr, fullname)
+		conn.commit()
+	else:
+		print("重复文件:", fullname)
+	if autoremove:
+		os.remove(fullname)
+
+def copyfileonce(filename, tofolder, autoremove=False):
+	conn = sqlite3.connect("copyonce.dat")
+	cur = conn.cursor()
+
+	root, name = path.split(filename)
+	copyonefile(conn, cur, root, name, root, tofolder, autoremove)
+
+	conn.close()
+
 
 def copyonce(folder, tofolder, filters=[], autoremove=False):
+	if path.exists(folder) and path.isfile(folder):
+		copyfileonce(folder, tofolder, autoremove)
+		return
+
 	conn = sqlite3.connect("copyonce.dat")
 	cur = conn.cursor()
 
@@ -72,25 +105,7 @@ def copyonce(folder, tofolder, filters=[], autoremove=False):
 		for name in files:
 			ext = path.splitext(name)[1]
 			if match_filter(ext, filters):
-				fullname = path.join(root, name)
-				hashstr = file_hash(fullname)
-				if not hash_exist(cur, hashstr):
-					todir = path.relpath(root, folder)
-					toname = path.join(tofolder, todir, name)
-					if path.exists(toname):
-						toname = solename(toname)
-					todir = path.split(toname)[0]
-					if not path.exists(todir):
-						os.makedirs(todir)
-					print("复制到", toname)
-					shutil.copy(fullname, toname)
-					hash_append(cur, hashstr, fullname)
-					conn.commit()
-				else:
-					print("重复文件:", fullname)
-				if autoremove:
-					os.remove(fullname)
-
+				copyonefile(conn, cur, root, name, folder, tofolder, autoremove)
 
 	conn.close()
 
