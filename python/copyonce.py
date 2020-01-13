@@ -102,7 +102,7 @@ def main():
 	parser = argparse.ArgumentParser(description='去重备份工具')
 	parser.add_argument('folder', help='要备份的源路径')
 	parser.add_argument('-o', '--tofolder', required=True, help='要备份的目标路径')
-	parser.add_argument('--autoremove', action='store_true', help='备份成功后是否自动删除源文件')
+	parser.add_argument('-a', '--autoremove', action='store_true', help='备份成功后是否自动删除源文件')
 	parser.add_argument('--filters', help='设置要备份的文件后缀(例如:".txt|.jpg|.png')
 
 	args = parser.parse_args()
