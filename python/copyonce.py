@@ -76,7 +76,7 @@ def copyonefile(conn, cur, root, name, folder, tofolder, autoremove):
 			os.makedirs(todir)
 		print("复制到", toname)
 		shutil.copy(fullname, toname)
-		hash_append(cur, hashstr, fullname)
+		hash_append(cur, hashstr, name)
 		conn.commit()
 	else:
 		print("重复文件:", fullname)
