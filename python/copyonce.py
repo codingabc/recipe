@@ -33,7 +33,7 @@ def hash_append(cur, hashstr, filename):
 	name = "tbl_%s" % hashstr[:2]
 	if not table_exist(cur, name):
 		table_create(cur, name)
-	sql = "INSERT INTO %s(hash, filename, ctime) VALUES('%s', '%s', datetime(CURRENT_TIMESTAMP, 'localtime'))" % (name, hashstr, filename)
+	sql = "INSERT INTO %s(hash, filename, ctime) VALUES('%s', '%s', datetime(CURRENT_TIMESTAMP, 'localtime'))" % (name, hashstr, filename.replace("'", "''"))
 	# print(sql)
 	cur.execute(sql)
 
